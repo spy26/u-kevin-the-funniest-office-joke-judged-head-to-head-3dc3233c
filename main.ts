@@ -26,6 +26,11 @@ if (JOKE.trim().length === 0) {
 if (JOKE !== JOKE.trim() || JOKE.includes("\n") || JOKE.includes("\r")) {
   throw new Error("entry must be a single line with no surrounding whitespace");
 }
+// ASCII only, per the header: the gate reads bytes, and a non-ASCII
+// character would change the byte count the grader sees.
+if (/[^\x00-\x7F]/.test(JOKE)) {
+  throw new Error("entry must be ASCII only");
+}
 // Exactly one sentence, punchline last: one terminator, and it ends the joke.
 const stops = [...JOKE].filter((c) => c === "." || c === "!" || c === "?");
 if (stops.length !== 1 || !JOKE.endsWith(stops[0])) {
